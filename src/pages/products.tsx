@@ -9,7 +9,6 @@ const categories = [
   { label: 'Dresses', value: 'dresses' },
   { label: 'Tops', value: 'tops' },
   { label: 'Gamis', value: 'gamis' },
-  { label: 'Sets', value: 'sets' },
 ]
 
 export function ProductsPage() {

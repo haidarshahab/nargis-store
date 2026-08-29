@@ -7,10 +7,9 @@ import { getFeaturedProducts, type Product } from '@/lib/supabase'
 import { formatPrice } from '@/lib/utils'
 
 const categories = [
-  { name: 'Dresses', slug: 'dresses', image: 'https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=600&h=750&fit=crop' },
-  { name: 'Tops & Blouses', slug: 'tops', image: 'https://images.unsplash.com/photo-1598554747436-c9293d6a588f?w=600&h=750&fit=crop' },
-  { name: 'Gamis & Abaya', slug: 'gamis', image: 'https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?w=600&h=750&fit=crop' },
-  { name: 'Sets', slug: 'sets', image: 'https://images.unsplash.com/photo-1618354691373-d851c5c3a990?w=600&h=750&fit=crop' },
+  { name: 'Dresses', slug: 'dresses', image: 'https://gpzoxblivqawiycvmeas.supabase.co/storage/v1/object/public/products/savana-dress/savana-dress-1.webp' },
+  { name: 'Tops & Blouses', slug: 'tops', image: 'https://gpzoxblivqawiycvmeas.supabase.co/storage/v1/object/public/products/camelia-blouse/camelia-blouse-1.webp' },
+  { name: 'Gamis', slug: 'gamis', image: 'https://gpzoxblivqawiycvmeas.supabase.co/storage/v1/object/public/products/gamis-floral-lebaran/gamis-floral-lebaran-1.webp' },
 ]
 
 const features = [
@@ -37,7 +36,7 @@ export function HomePage() {
         <div
           className="absolute inset-0 bg-cover bg-center bg-no-repeat"
           style={{
-            backgroundImage: 'url(https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=1920&h=800&fit=crop)',
+            backgroundImage: 'url(https://gpzoxblivqawiycvmeas.supabase.co/storage/v1/object/public/products/aveline-dress/aveline-dress-2.webp)',
           }}
         />
         <div className="absolute inset-0 bg-black/30" />
@@ -69,7 +68,7 @@ export function HomePage() {
           <h2 className="text-3xl font-serif font-bold text-primary">Shop by Category</h2>
           <p className="text-muted-foreground">Temukan koleksi favorit Anda</p>
         </div>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
           {categories.map((cat) => (
             <Link
               key={cat.slug}

@@ -32,11 +32,11 @@ export function HomePage() {
 
   return (
     <div className="space-y-16">
-      <section className="relative h-[600px] flex items-end justify-center pb-16">
+      <section className="relative h-[500px] md:h-[600px] flex items-end justify-center pb-16">
         <div
           className="absolute inset-0 bg-cover bg-center bg-no-repeat"
           style={{
-            backgroundImage: 'url(https://gpzoxblivqawiycvmeas.supabase.co/storage/v1/object/public/products/aveline-dress/aveline-dress-2.webp)',
+            backgroundImage: 'url(https://gpzoxblivqawiycvmeas.supabase.co/storage/v1/object/public/products/hero/hero-bg.jpg)',
           }}
         />
         <div className="absolute inset-0 bg-black/30" />

@@ -1,12 +1,19 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { Component, type ReactNode } from 'react'
 import { Layout } from '@/components/layout'
+import { AdminLayout } from '@/components/admin-layout'
+import { ProtectedRoute } from '@/components/protected-route'
+import { ToastProvider } from '@/components/toast'
 import { HomePage } from '@/pages/home'
 import { ProductsPage } from '@/pages/products'
 import { ProductDetailPage } from '@/pages/product-detail'
 import { CartPage } from '@/pages/cart'
 import { AboutPage } from '@/pages/about'
 import { ContactPage } from '@/pages/contact'
+import { AdminLoginPage } from '@/pages/admin/login'
+import { AdminDashboard } from '@/pages/admin/dashboard'
+import { AdminProductsPage } from '@/pages/admin/products'
+import { AdminOrdersPage } from '@/pages/admin/orders'
 
 class ErrorBoundary extends Component<{ children: ReactNode }, { hasError: boolean }> {
   state = { hasError: false }
@@ -39,18 +46,29 @@ class ErrorBoundary extends Component<{ children: ReactNode }, { hasError: boole
 function App() {
   return (
     <ErrorBoundary>
-      <BrowserRouter>
-        <Routes>
-          <Route element={<Layout />}>
-            <Route path="/" element={<HomePage />} />
-            <Route path="/products" element={<ProductsPage />} />
-            <Route path="/products/:slug" element={<ProductDetailPage />} />
-            <Route path="/cart" element={<CartPage />} />
-            <Route path="/about" element={<AboutPage />} />
-            <Route path="/contact" element={<ContactPage />} />
-          </Route>
-        </Routes>
-      </BrowserRouter>
+      <ToastProvider>
+        <BrowserRouter>
+          <Routes>
+            <Route element={<Layout />}>
+              <Route path="/" element={<HomePage />} />
+              <Route path="/products" element={<ProductsPage />} />
+              <Route path="/products/:slug" element={<ProductDetailPage />} />
+              <Route path="/cart" element={<CartPage />} />
+              <Route path="/about" element={<AboutPage />} />
+              <Route path="/contact" element={<ContactPage />} />
+            </Route>
+
+            <Route path="/admin/login" element={<AdminLoginPage />} />
+            <Route element={<ProtectedRoute />}>
+              <Route element={<AdminLayout />}>
+                <Route path="/admin/dashboard" element={<AdminDashboard />} />
+                <Route path="/admin/products" element={<AdminProductsPage />} />
+                <Route path="/admin/orders" element={<AdminOrdersPage />} />
+              </Route>
+            </Route>
+          </Routes>
+        </BrowserRouter>
+      </ToastProvider>
     </ErrorBoundary>
   )
 }

@@ -1,6 +1,6 @@
-import { useEffect, useState } from 'react'
-import { Plus, Pencil, Trash2, X, Search } from 'lucide-react'
-import { supabase, type Product } from '@/lib/supabase'
+import { useEffect, useState, useRef } from 'react'
+import { Plus, Pencil, Trash2, X, Search, Upload, Loader2 } from 'lucide-react'
+import { supabase, type Product, uploadProductImage } from '@/lib/supabase'
 import { formatPrice, generateSlug } from '@/lib/utils'
 import { useToast } from '@/components/toast'
 
@@ -10,7 +10,7 @@ const emptyProduct = {
   description: '',
   price: 0,
   compare_price: 0,
-  images: [''],
+  images: [] as string[],
   category: 'dresses',
   collection: '',
   stock: 0,
@@ -26,6 +26,8 @@ export function AdminProductsPage() {
   const [editing, setEditing] = useState<typeof emptyProduct | null>(null)
   const [editingId, setEditingId] = useState<string | null>(null)
   const [saving, setSaving] = useState(false)
+  const [uploading, setUploading] = useState(false)
+  const fileInputRef = useRef<HTMLInputElement>(null)
   const { toast } = useToast()
 
   const loadProducts = async () => {
@@ -55,7 +57,7 @@ export function AdminProductsPage() {
       description: p.description || '',
       price: p.price,
       compare_price: p.compare_price || 0,
-      images: p.images.length > 0 ? p.images : [''],
+      images: p.images || [],
       category: p.category,
       collection: p.collection || '',
       stock: p.stock,
@@ -63,6 +65,31 @@ export function AdminProductsPage() {
       colors: p.colors.join(', '),
       sizes: p.sizes.join(', '),
     })
+  }
+
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files
+    if (!files || files.length === 0 || !editing) return
+    setUploading(true)
+    try {
+      const newImages = [...editing.images]
+      for (const file of Array.from(files)) {
+        const url = await uploadProductImage(file, editing.name || 'product')
+        newImages.push(url)
+      }
+      setEditing({ ...editing, images: newImages })
+      toast('Gambar berhasil diunggah')
+    } catch (error) {
+      toast('Gagal mengunggah gambar', 'error')
+    } finally {
+      setUploading(false)
+      if (fileInputRef.current) fileInputRef.current.value = ''
+    }
+  }
+
+  const handleRemoveImage = (index: number) => {
+    if (!editing) return
+    setEditing({ ...editing, images: editing.images.filter((_, i) => i !== index) })
   }
 
   const handleSave = async () => {
@@ -75,7 +102,7 @@ export function AdminProductsPage() {
       description: editing.description,
       price: editing.price,
       compare_price: editing.compare_price || null,
-      images: editing.images.filter((i) => i.trim()),
+      images: editing.images,
       category: editing.category,
       collection: editing.collection || null,
       stock: editing.stock,
@@ -259,14 +286,56 @@ export function AdminProductsPage() {
                 />
               </div>
               <div>
-                <label className="text-sm font-medium text-foreground">Gambar URL</label>
-                <input
-                  type="text"
-                  value={editing.images[0] || ''}
-                  onChange={(e) => setEditing({ ...editing, images: [e.target.value] })}
-                  className="w-full mt-1 px-3 py-2 border border-border rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-primary bg-background"
-                  placeholder="https://..."
-                />
+                <label className="text-sm font-medium text-foreground">Gambar Produk</label>
+                {editing.images.length > 0 && (
+                  <div className="grid grid-cols-3 gap-2 mt-2">
+                    {editing.images.map((image, index) => (
+                      <div key={index} className="relative group">
+                        <img
+                          src={image}
+                          alt={`Produk ${index + 1}`}
+                          className="w-full aspect-square object-cover rounded-lg border"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => handleRemoveImage(index)}
+                          className="absolute top-1 right-1 bg-red-600 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                        >
+                          <X className="h-3 w-3" />
+                        </button>
+                        {index === 0 && (
+                          <span className="absolute bottom-1 left-1 bg-primary text-white text-xs px-2 py-0.5 rounded">
+                            Utama
+                          </span>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                )}
+                <div className="mt-2">
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    accept="image/*"
+                    multiple
+                    onChange={handleImageUpload}
+                    className="hidden"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => fileInputRef.current?.click()}
+                    disabled={uploading}
+                    className="inline-flex items-center gap-2 px-4 py-2 border border-border rounded-md text-sm font-medium hover:bg-muted disabled:opacity-50"
+                  >
+                    {uploading ? (
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                    ) : (
+                      <Upload className="h-4 w-4" />
+                    )}
+                    {uploading ? 'Mengunggah...' : 'Unggah Gambar'}
+                  </button>
+                  <p className="text-xs text-muted-foreground mt-1">Gambar pertama akan menjadi gambar utama</p>
+                </div>
               </div>
               <div className="grid grid-cols-2 gap-3">
                 <div>

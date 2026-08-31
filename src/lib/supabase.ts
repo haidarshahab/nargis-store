@@ -74,3 +74,15 @@ export async function getCategories(): Promise<string[]> {
   const categories = [...new Set(data?.map((p) => p.category) as string[])]
   return categories
 }
+
+export async function uploadProductImage(file: File, productName: string): Promise<string> {
+  const ext = file.name.split('.').pop() || 'webp'
+  const safeName = productName.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || 'product'
+  const fileName = `${safeName}/${safeName}-${Date.now()}.${ext}`
+  const { data, error } = await supabase.storage
+    .from('products')
+    .upload(fileName, file, { upsert: true })
+  if (error) throw error
+  const { data: urlData } = supabase.storage.from('products').getPublicUrl(data.path)
+  return urlData.publicUrl
+}

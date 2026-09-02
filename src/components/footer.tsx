@@ -43,7 +43,7 @@ export function Footer() {
                 </svg>
               </a>
               <a
-                href="https://wa.me/6281270015001"
+                href="https://wa.me/6281270015001?text=Halo%20Nargis%2C%20saya%20mau%20tanya-tanya%20nih"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="hover:text-secondary transition-colors"

@@ -1,7 +1,7 @@
 export function FloatingWhatsApp() {
   return (
     <a
-      href="https://wa.me/6281270015001"
+      href="https://wa.me/6281270015001?text=Halo%20Nargis%2C%20saya%20mau%20tanya-tanya%20nih"
       target="_blank"
       rel="noopener noreferrer"
       className="fixed bottom-6 right-6 z-50 bg-green-500 hover:bg-green-600 rounded-full p-3 shadow-lg transition-all hover:scale-110"
